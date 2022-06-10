@@ -8,31 +8,11 @@
   <?php include "partials/cabecalho.php" ?>
   <title>Home</title>
   <?php
-  $filme1 = [
-    "titulo" => "Vindadores",
-    "nota" => 8.6,
-    "sinopse" => "Lorem ipsum dolor sit amet.",
-    "poster" => "d"
-  ];
-  $filme2 = [
-    "titulo" => "lorem 2",
-    "nota" => 5.6,
-    "sinopse" => "Lorem ipsum dolor sit amet.",
-    "poster" => "a"
-  ];
-  $filme3 = [
-    "titulo" => "lorem 3",
-    "nota" => 8.0,
-    "sinopse" => "Lorem ipsum dolor sit amet.",
-    "poster" => "b"
-  ];
-  $filme4 = [
-    "titulo" => "lorem 4",
-    "nota" => 5.9,
-    "sinopse" => "Lorem ipsum dolor sit amet.",
-    "poster" => "c"
-  ];
-  $filmes = [$filme1,$filme2,$filme3,$filme4]
+
+  require "./repository/FilmesRepositoryPDO.php";
+
+  $filmesRepository = new FilmesRepositoryPDO();
+  $filmes = $filmesRepository->listarTodos();
   ?>
 </head>
 
@@ -55,23 +35,31 @@
       </ul>
     </div>
   </nav>
-  <div class="row">
-    <?php foreach($filmes as $filme): ?>
-    <div class="col s3">
-      <div class="card hoverable">
-        <div class="card-image">
-          <img src="http://materializecss.com/images/sample-1.jpg">
-          <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">favorite_border</i></a>
-        </div>
-        <div class="card-content">
-          <p class="valign-wrapper"><i class="material-icons amber-text">star</i><?php echo $filme["nota"]; ?></p>
-          <span class="card-title"><?php echo $filme["titulo"]; ?></span>
-          <p><?php echo $filme["sinopse"]; ?></p>
+  <div class="container">
+    <div class="row">
+      <?php foreach($filmes as $filme):?>
+      <div class="col s12 m6 l3">
+        <div class="card hoverable">
+          <div class="card-image">
+            <img src=<?= $filme->poster?>>
+            <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">favorite_border</i></a>
+          </div>
+          <div class="card-content">
+            <p class="valign-wrapper"><i class="material-icons amber-text">star</i><?= $filme->nota; ?></p>
+            <span class="card-title"><?= $filme->titulo; ?></span>
+            <p><?= $filme->sinopse; ?></p>
+          </div>
         </div>
       </div>
+      <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
   </div>
 </body>
-
+<?php if(isset($_GET["msg"])): ?>
+<script>
+  M.toast({
+    html: '<?= $_GET["msg"]?>'
+  })
+</script>
+<?php endif; ?>
 </html>
